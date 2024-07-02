@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_community_flutter/widgets/chat.dart';
-import 'package:project_community_flutter/widgets/sidebar.dart';
+import 'package:project_community_flutter/widgets/channel_bar.dart';
 import 'package:window_size/window_size.dart';
 import 'package:window_manager/window_manager.dart';
 
