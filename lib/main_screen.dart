@@ -46,7 +46,7 @@ class MainScreenState extends State<MainScreen> with WindowListener {
     return const Scaffold(
       body: Row(
         children: <Widget>[
-          Sidebar(),
+          Sidebar(serverId: '6681d8b804a5fe4b21e2cabe',),
           Expanded(
             child: ChatArea(),
           ),

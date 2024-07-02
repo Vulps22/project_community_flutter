@@ -31,7 +31,7 @@ class SplashScreenState extends State<SplashScreen> with WindowListener {
 
   Future<void> doStartup() async {
     bool isLoggedIn = await _checkAuthToken();
-    if (!isLoggedIn) {
+    if (isLoggedIn) {
       Navigator.pushReplacementNamed(context, '/main');
     } else {
       Navigator.pushReplacementNamed(context, '/login');
