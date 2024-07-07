@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:project_community_flutter/widgets/chat.dart';
-import 'package:project_community_flutter/widgets/channel_bar.dart';
-import 'package:window_size/window_size.dart';
+import 'package:project_community_flutter/providers/state_manager_provider.dart';
+import 'package:project_community_flutter/states/channel_state.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
+import 'widgets/channel_bar.dart';
+import 'widgets/chat_area.dart';
+import 'widgets/server_bar.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -11,11 +15,11 @@ class MainScreen extends StatefulWidget {
   MainScreenState createState() => MainScreenState();
 }
 
-class MainScreenState extends State<MainScreen> with WindowListener {
+class MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    windowManager.hide();
+
     WindowOptions windowOptions = const WindowOptions(
       size: Size(1280, 1080),
       center: true,
@@ -29,26 +33,21 @@ class MainScreenState extends State<MainScreen> with WindowListener {
       await windowManager.focus();
       await windowManager.maximize();
     });
-    
-
-
   }
-
-  @override
-  void dispose() {
-    windowManager.removeListener(this);
-    super.dispose();
-  }
-
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Row(
-        children: <Widget>[
-          Sidebar(serverId: '6681d8b804a5fe4b21e2cabe',),
+        children: [
+          const ServerBar(),
+          const ChannelBar(),
           Expanded(
-            child: ChatArea(),
+            child: Consumer<ChannelState>(
+              builder: (context, channelState, child) {
+                return ChatArea(initialMessages: channelState.messages);
+              },
+            ),
           ),
         ],
       ),

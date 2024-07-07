@@ -1,83 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:project_community_flutter/helpers/custom_color.dart';
+import 'package:project_community_flutter/providers/state_manager_provider.dart';
+import 'package:project_community_flutter/states/channel_state.dart';
+import 'package:provider/provider.dart';
 import '../models/channel.dart';
 import '../models/server.dart';
-import '../services/api_service.dart'; // Adjust the path according to your project structure
 
-class Sidebar extends StatefulWidget {
-  final String serverId;
-
-  const Sidebar({super.key, required this.serverId});
+class ChannelBar extends StatefulWidget {
+  const ChannelBar({super.key});
 
   @override
-  SidebarState createState() => SidebarState();
+  ChannelBarState createState() => ChannelBarState();
 }
 
-class SidebarState extends State<Sidebar> {
-  late Future<Server> futureServer;
-
-  @override
-  void initState() {
-    super.initState();
-    futureServer = getServer(widget.serverId);
-  }
-
-  void selectChannel(String id) {
-    // Handle channel selection
-    print('Selected channel: $id');
-  }
-
+class ChannelBarState extends State<ChannelBar> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 250,
-      color: Colors.grey[900],
-      child: FutureBuilder<Server>(
-        future: futureServer,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.channels.isEmpty) {
-            return const Center(child: Text('No channels available'));
-          } else {
-            List<Channel> channels = snapshot.data!.channels;
-            return ListView.builder(
-              padding: const EdgeInsets.all(8.0),
-              itemCount: channels.length,
-              itemBuilder: (context, index) {
-                return SidebarItem(
+    return Consumer<StateManagerProvider>(
+      builder: (context, manager, child) {
+        if (manager.selectedServer == null) {
+          print("No Server when loading channels");
+          return Container(
+            width: 250,
+            color: CustomColors
+                .grey850, // This represents a grey shade similar to 850
+            child: const Center(child: Text('No server selected')),
+          );
+        }
+
+        List<Channel> channels = manager.selectedServer!.channels;
+        if (channels.isEmpty) {
+          print("No channels to list");
+          return Container(
+            width: 250,
+            color: CustomColors
+                .grey850, // This represents a grey shade similar to 850
+            child: const Center(child: Text('No channels available')),
+          );
+        }
+
+        return Container(
+          width: 250,
+          color: CustomColors
+              .grey850, // This represents a grey shade similar to 850
+          child: ListView.builder(
+            padding: const EdgeInsets.all(8.0),
+            itemCount: channels.length,
+            itemBuilder: (context, index) {
+              return Expanded(
+                child: ChannelBarItem(
                   name: channels[index].name,
-                  onTap: () => selectChannel(channels[index].id),
-                );
-              },
-            );
-          }
-        },
-      ),
+                  onTap: () =>
+                      Provider.of<StateManagerProvider>(context, listen: false)
+                          .selectChannel(channels[index]),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
 
-class SidebarItem extends StatelessWidget {
+class ChannelBarItem extends StatelessWidget {
   final String name;
   final VoidCallback onTap;
 
-  const SidebarItem({super.key, required this.name, required this.onTap});
+  const ChannelBarItem({super.key, required this.name, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Text(
-          name,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18.0,
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                name,
+                style: const TextStyle(color: Colors.white),
+                ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
