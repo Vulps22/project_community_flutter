@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:project_community_flutter/models/server.dart';
 import 'package:project_community_flutter/models/server_list_item.dart';
 import 'package:project_community_flutter/models/user.dart';
 import 'package:project_community_flutter/providers/state_manager_provider.dart';
@@ -58,14 +56,12 @@ class SplashScreenState extends State<SplashScreen> with WindowListener {
   Future<void> _loadUser() async {
     _updateStatus("Loading your details...");
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     User user = await getUser();
     Provider.of<StateManagerProvider>(context, listen: false).currentUser = user;
   }
 
   Future<void> _fetchAndStoreServerList() async {
     _updateStatus("Fetching your server list...");
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     List<ServerListItem> servers = await getServers();
     // Store servers in StateManagerProvider
     Provider.of<StateManagerProvider>(context, listen: false).servers = servers;

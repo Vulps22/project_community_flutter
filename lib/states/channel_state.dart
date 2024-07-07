@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/message.dart';
-import '../services/api_service.dart'; // Adjust the path according to your project structure
-
+@Deprecated("Use StateManagerProvider instead")
 class ChannelState extends ChangeNotifier {
   String _selectedChannelId = '';
   String _serverId = '';

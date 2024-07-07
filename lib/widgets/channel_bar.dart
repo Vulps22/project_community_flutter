@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_community_flutter/helpers/custom_color.dart';
 import 'package:project_community_flutter/providers/state_manager_provider.dart';
-import 'package:project_community_flutter/states/channel_state.dart';
 import 'package:provider/provider.dart';
 import '../models/channel.dart';
-import '../models/server.dart';
 
 class ChannelBar extends StatefulWidget {
   const ChannelBar({super.key});

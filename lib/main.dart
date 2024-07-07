@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_community_flutter/providers/state_manager_provider.dart';
 import 'package:project_community_flutter/register_screen.dart';
-import 'package:project_community_flutter/states/channel_state.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
@@ -25,7 +24,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ChannelState()),
         ChangeNotifierProvider(create: (_) => StateManagerProvider()),
       ],
       child: MaterialApp(

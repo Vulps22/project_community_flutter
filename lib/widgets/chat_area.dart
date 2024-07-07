@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:project_community_flutter/managers/state_manager.dart';
 import 'package:project_community_flutter/providers/state_manager_provider.dart';
 import 'package:project_community_flutter/services/api_service.dart';
 import 'package:provider/provider.dart';
-import 'package:project_community_flutter/enum/message_status.dart';
 import 'package:project_community_flutter/models/message.dart';
 import 'package:project_community_flutter/widgets/chat_input.dart';
 import 'package:project_community_flutter/widgets/chat_message.dart';
@@ -20,15 +16,10 @@ class ChatArea extends StatefulWidget {
 }
 
 class _ChatAreaState extends State<ChatArea> {
-  List<Message> _messages = [];
 
   @override
   void initState() {
     super.initState();
-    StateManagerProvider manager = Provider.of<StateManagerProvider>(context, listen: false);
-    if(manager.messages.isNotEmpty) {
-      _messages = manager.messages;
-    }
   }
 
   void _sendMessage(String content) async {

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_community_flutter/providers/state_manager_provider.dart';
-import 'package:project_community_flutter/states/channel_state.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 import 'widgets/channel_bar.dart';
 import 'widgets/chat_area.dart';
@@ -43,7 +41,7 @@ class MainScreenState extends State<MainScreen> {
           const ServerBar(),
           const ChannelBar(),
           Expanded(
-            child: Consumer<ChannelState>(
+            child: Consumer<StateManagerProvider>(
               builder: (context, channelState, child) {
                 return ChatArea(initialMessages: channelState.messages);
               },
