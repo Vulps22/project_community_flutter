@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:project_community_flutter/models/server.dart';
 import 'package:project_community_flutter/models/server_list_item.dart';
+import 'package:project_community_flutter/models/user.dart';
 import 'package:project_community_flutter/providers/state_manager_provider.dart';
 import 'package:project_community_flutter/services/api_service.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,8 @@ class SplashScreenState extends State<SplashScreen> with WindowListener {
   Future<void> _loadData() async {
     _updateStatus("Loading your data...");
 
+    await _loadUser();
+
     // Fetch the server list and store it
     await _fetchAndStoreServerList();
 
@@ -50,6 +53,14 @@ class SplashScreenState extends State<SplashScreen> with WindowListener {
 
     // Navigate to the main screen
     Navigator.pushReplacementNamed(context, '/main');
+  }
+
+  Future<void> _loadUser() async {
+    _updateStatus("Loading your details...");
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    User user = await getUser();
+    Provider.of<StateManagerProvider>(context, listen: false).currentUser = user;
   }
 
   Future<void> _fetchAndStoreServerList() async {

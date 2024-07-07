@@ -63,7 +63,8 @@ class LoginScreenState extends State<LoginScreen> with WindowListener {
         await prefs.setString('auth_token', data['token']);
 
         // Navigate to the main screen
-        Navigator.popAndPushNamed(context, '/main');
+        Navigator.pop(context);
+        Navigator.pushNamed(context, '/');
       } else {
         // If the server returns an error response, show an error message.
         print('Failed to login: ${response.body}');

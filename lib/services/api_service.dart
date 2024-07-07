@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:project_community_flutter/enum/message_status.dart';
 import 'package:project_community_flutter/models/message.dart';
 import 'package:project_community_flutter/models/server_list_item.dart';
+import 'package:project_community_flutter/models/user.dart';
 import 'package:project_community_flutter/providers/state_manager_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/server.dart'; // Adjust the path according to your project structure
@@ -114,6 +115,26 @@ Future<bool> sendMessage(String content, StateManagerProvider manager) async {
   } catch (e) {
     print('Error sending message: $e');
     return false;
+  }
+}
+
+Future<User> getUser() async {
+  var token = await _getToken();
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/user/me'),
+    headers: {
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return User.fromJson(json.decode(response.body));
+  } else if (response.statusCode == 401) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
+    throw Exception('Token Rejected');
+  } else {
+    throw Exception('Failed to load user');
   }
 }
 

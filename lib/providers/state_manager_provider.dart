@@ -20,20 +20,20 @@ class StateManagerProvider extends ChangeNotifier {
   List<Message> get messages => _messages;
   List<ServerListItem> get servers => _servers;
 
-  set setCurrentUser(User? user) {
+  set currentUser(User? user) {
     _currentUser = user;
     notifyListeners();
   }
 
   set selectedServer(Server? server) {
     _selectedServer = server;
-    _saveLastSelected();
+    _saveLastSelected(true);
     notifyListeners();
   }
 
   set selectedChannel(Channel? channel) {
     _selectedChannel = channel;
-    _saveLastSelected();
+    _saveLastSelected(false);
     notifyListeners();
   }
 
@@ -59,8 +59,21 @@ class StateManagerProvider extends ChangeNotifier {
 
   Future<Server?> selectAndLoadServer(String id) async {
     try {
-      var server = await getServer(id);
+      Server server = await getServer(id);
       selectedServer = server;
+
+      //select the last viewed channel for this server, or the first channel in the list
+      _messages.clear(); //ensure there are no messages from previous server
+       Channel channel = server.channels.first;
+
+       SharedPreferences prefs = await SharedPreferences.getInstance();
+       var lastChannelId = prefs.getString('last_channel_id');
+       if(lastChannelId != null) {
+        channel = server.channels.firstWhere((candidate) => candidate.id == lastChannelId);
+       }
+
+      selectChannel(channel);
+
       return server;
     } catch (e) {
       print(e.toString());
@@ -74,13 +87,13 @@ class StateManagerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _saveLastSelected() async {
+  Future<void> _saveLastSelected(bool saveServer) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print("saving selections");
-    if (_selectedServer != null) {
+    if (_selectedServer != null && saveServer) {
       prefs.setString('last_server_id', _selectedServer!.id);
     }
-    if (_selectedChannel != null) {
+    if (_selectedChannel != null && !saveServer) {
       prefs.setString('last_channel_id', _selectedChannel!.id);
     }
   }
