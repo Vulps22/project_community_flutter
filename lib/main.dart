@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_community_flutter/providers/event_manager_provider.dart';
 import 'package:project_community_flutter/providers/state_manager_provider.dart';
 import 'package:project_community_flutter/register_screen.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => StateManagerProvider()),
+        ChangeNotifierProvider(create: (_) => EventManagerProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Splash Screen Example',

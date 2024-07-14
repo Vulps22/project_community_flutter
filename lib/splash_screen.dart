@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_community_flutter/models/server_list_item.dart';
 import 'package:project_community_flutter/models/user.dart';
+import 'package:project_community_flutter/providers/event_manager_provider.dart';
 import 'package:project_community_flutter/providers/state_manager_provider.dart';
 import 'package:project_community_flutter/services/api_service.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +47,9 @@ class SplashScreenState extends State<SplashScreen> with WindowListener {
     // Fetch the server list and store it
     await _fetchAndStoreServerList();
 
+    // Register that the user has connected to each server
+    await _connectToServers();
+
     // Check if there is a last selected server and channel
     await _checkLastSelected();
 
@@ -65,6 +69,17 @@ class SplashScreenState extends State<SplashScreen> with WindowListener {
     List<ServerListItem> servers = await getServers();
     // Store servers in StateManagerProvider
     Provider.of<StateManagerProvider>(context, listen: false).servers = servers;
+  }
+
+  Future<void> _connectToServers() async {
+    _updateStatus("Connecting to your servers...");
+    List<ServerListItem> servers = Provider.of<StateManagerProvider>(context, listen: false).servers;
+    EventManagerProvider eventManager = Provider.of<EventManagerProvider>(context, listen: false);
+
+  servers.forEach((server) {
+    eventManager.joinServer(server.id);
+  });
+
   }
 
   Future<void> _checkLastSelected() async {
