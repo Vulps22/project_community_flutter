@@ -80,8 +80,9 @@ Future<bool> sendMessage(String content, StateManagerProvider manager) async {
     print('User, channel, or server, is not set.');
     return false;
   }
-
+  var tempId = "TEMP${manager.messages.length.toString()}";
   final newMessage = Message(
+    id: tempId,
     content: content,
     sender: user,
     status: MessageStatus.sending,
@@ -90,9 +91,10 @@ Future<bool> sendMessage(String content, StateManagerProvider manager) async {
     timestamp: DateTime.now(),
   );
 
+  manager.addMessage(newMessage);
   try {
     final response = await http.post(
-      Uri.parse('http://localhost:3000/messages/create'),
+      Uri.parse('http://localhost:3000/message/create'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -106,7 +108,10 @@ Future<bool> sendMessage(String content, StateManagerProvider manager) async {
     );
 
     if (response.statusCode == 200) {
-      // Optionally handle the response, update message status, etc.
+      var body = json.decode(response.body);
+      var newId = body['data']['_id'];
+      print(newId);
+      manager.setDelivered(tempId, newId);
       return true;
     } else {
       print('Failed to send message: ${response.body}');

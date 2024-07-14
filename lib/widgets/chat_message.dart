@@ -34,7 +34,6 @@ class ChatMessage extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              if (status == MessageStatus.sending) const CircularProgressIndicator(),
               if (status == MessageStatus.failed) const Icon(Icons.error, color: Colors.red),
             ],
           ),

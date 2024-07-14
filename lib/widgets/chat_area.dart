@@ -12,10 +12,10 @@ class ChatArea extends StatefulWidget {
   const ChatArea({super.key, required this.initialMessages});
 
   @override
-  _ChatAreaState createState() => _ChatAreaState();
+  ChatAreaState createState() => ChatAreaState();
 }
 
-class _ChatAreaState extends State<ChatArea> {
+class ChatAreaState extends State<ChatArea> {
 
   @override
   void initState() {

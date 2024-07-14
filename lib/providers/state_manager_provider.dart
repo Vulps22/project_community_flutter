@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_community_flutter/enum/message_status.dart';
 import 'package:project_community_flutter/models/channel.dart';
 import 'package:project_community_flutter/models/message.dart';
 import 'package:project_community_flutter/models/server.dart';
@@ -57,6 +58,13 @@ class StateManagerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Mark a message as delivered
+  void setDelivered(String tempId, String newId) {
+    Message message = _messages.firstWhere((candidate) => candidate.id == tempId);
+    message.status = MessageStatus.delivered;
+    message.id = newId;
+  }
+
   Future<Server?> selectAndLoadServer(String id) async {
     try {
       Server server = await getServer(id);
@@ -64,13 +72,14 @@ class StateManagerProvider extends ChangeNotifier {
 
       //select the last viewed channel for this server, or the first channel in the list
       _messages.clear(); //ensure there are no messages from previous server
-       Channel channel = server.channels.first;
+      Channel channel = server.channels.first;
 
-       SharedPreferences prefs = await SharedPreferences.getInstance();
-       var lastChannelId = prefs.getString('last_channel_id');
-       if(lastChannelId != null) {
-        channel = server.channels.firstWhere((candidate) => candidate.id == lastChannelId);
-       }
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var lastChannelId = prefs.getString('last_channel_id');
+      if (lastChannelId != null) {
+        channel = server.channels
+            .firstWhere((candidate) => candidate.id == lastChannelId);
+      }
 
       selectChannel(channel);
 

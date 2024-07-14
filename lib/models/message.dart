@@ -2,10 +2,10 @@ import 'package:project_community_flutter/models/user.dart';
 import 'package:project_community_flutter/enum/message_status.dart';
 
 class Message {
-  final String? id;
+  String? id;
   final String content;
   final User sender;
-  final MessageStatus status;
+  MessageStatus status;
   final String channelId;
   final String serverId;
   final DateTime timestamp;

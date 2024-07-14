@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/message.dart';
+
 @Deprecated("Use StateManagerProvider instead")
 class ChannelState extends ChangeNotifier {
   String _selectedChannelId = '';

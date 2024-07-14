@@ -2,6 +2,7 @@ import 'package:project_community_flutter/models/channel.dart';
 import 'package:project_community_flutter/models/server.dart';
 import 'package:project_community_flutter/models/user.dart';
 
+@Deprecated("Use StateManagerProvider instead")
 class StateManager {
   static final StateManager _instance = StateManager._internal();
   User? _currentUser;
